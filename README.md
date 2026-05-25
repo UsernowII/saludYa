@@ -1,6 +1,7 @@
 # SaludYa — Sistema de Gestión de Citas Médicas
 
-Aplicación web para gestionar citas médicas en consultorios pequeños. Desarrollada como proyecto académico para la asignatura Desarrollo de Aplicaciones Web — Corporación Universitaria Iberoamericana.
+Aplicación web para gestionar citas médicas en consultorios pequeños.
+Desarrollada como proyecto académico para la asignatura Desarrollo de Aplicaciones Web — Corporación Universitaria Iberoamericana.
 
 ## Stack
 
