@@ -26,17 +26,20 @@ describe('GET /api/appointments/available', () => {
   });
 
   test('200 — returns available slots', async () => {
-    // doctors of that specialty
+    // Query 1: JOIN doctors + users + specialties + doctor_schedules
     query.mockResolvedValueOnce({
-      rows: [{ doctor_id: 1, doctor_name: 'Dr. García', specialty: 'Medicina General' }],
+      rows: [{
+        doctor_id: 1,
+        doctor_name: 'Dr. García',
+        specialty: 'Medicina General',
+        start_time: '08:00:00',
+        end_time: '12:00:00',
+        slot_duration_minutes: 30,
+      }],
     });
-    // schedule for that day
-    query.mockResolvedValueOnce({
-      rows: [{ start_time: '08:00:00', end_time: '12:00:00', slot_duration_minutes: 30 }],
-    });
-    // booked slots
+    // Query 2: blocked dates
     query.mockResolvedValueOnce({ rows: [] });
-    // blocked dates
+    // Query 3: booked appointments
     query.mockResolvedValueOnce({ rows: [] });
 
     const res = await request(app)
