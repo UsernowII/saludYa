@@ -17,8 +17,13 @@ export default function Login() {
     setLoading(true)
 
     try {
-      await login(email, password)
-      navigate('/dashboard', { replace: true })
+      const userData = await login(email, password)
+      const roleRoutes = {
+        patient: '/dashboard',
+        doctor:  '/doctor/dashboard',
+        admin:   '/admin/dashboard',
+      }
+      navigate(roleRoutes[userData.role] || '/dashboard', { replace: true })
     } catch (err) {
       const msg =
         err.response?.data?.message ||
