@@ -19,7 +19,7 @@ export const appointmentService = {
    * Get appointments for the currently authenticated patient.
    */
   getMyAppointments: () =>
-    api.get('/appointments/me'),
+    api.get('/appointments/my'),
 
   /**
    * Cancel an appointment by id.
@@ -44,11 +44,11 @@ export const appointmentService = {
    * Get today's appointments for the logged-in doctor.
    */
   getDoctorToday: () =>
-    api.get('/appointments/doctor/today'),
+    api.get('/doctors/appointments'),
 
   /**
    * Admin: get aggregated metrics (today's totals).
    */
   getAdminMetrics: () =>
-    api.get('/appointments/admin/metrics'),
+    api.get('/admin/metrics'),
 }
