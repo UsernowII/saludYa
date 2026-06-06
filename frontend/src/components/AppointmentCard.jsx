@@ -44,7 +44,7 @@ export default function AppointmentCard({ appointment, onCancel, onReschedule })
     <article className="appt-card">
       <div className="appt-card__header">
         <strong style={{ fontSize: '1rem', color: 'var(--gray-900)' }}>
-          Dr. {doctor}
+          {doctor}
         </strong>
         <span className={`badge badge--${status}`}>
           {STATUS_LABELS[status] ?? status}
