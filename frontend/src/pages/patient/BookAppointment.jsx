@@ -138,12 +138,15 @@ function StepDoctorSlot({ state, dispatch }) {
   })
 
   const handleSlotClick = (doctor, slot) => {
-    setSelected({ doctorId: doctor.id, slot })
+    const id = doctor.doctor_id ?? doctor.id
+    setSelected({ doctorId: id, slot })
   }
 
   const handleContinue = () => {
     if (!selected) return
-    const doctor = doctors.find((d) => d.id === selected.doctorId)
+    const doctor = doctors.find(
+      (d) => (d.doctor_id ?? d.id) === selected.doctorId
+    )
     dispatch({
       type: 'SELECT_SLOT',
       payload: { doctor, slot: selected.slot },
@@ -177,9 +180,9 @@ function StepDoctorSlot({ state, dispatch }) {
       {doctors.map((doctor) => (
         <div key={doctor.id} className="doctor-group">
           <div className="doctor-group__header">
-            <div className="avatar avatar--md">{doctor.name?.charAt(0) ?? 'D'}</div>
+            <div className="avatar avatar--md">{(doctor.doctor_name ?? doctor.name)?.charAt(0) ?? 'D'}</div>
             <div>
-              <div className="doctor-group__name">Dr. {doctor.name}</div>
+              <div className="doctor-group__name">Dr. {doctor.doctor_name ?? doctor.name}</div>
               <div className="doctor-group__specialty">{doctor.specialty || state.specialty?.name}</div>
             </div>
           </div>
@@ -229,7 +232,7 @@ function StepConfirm({ state, dispatch, onConfirm, loading }) {
         </div>
         <div className="confirm-row">
           <span className="confirm-row__label">Médico</span>
-          <span className="confirm-row__value">Dr. {state.doctor?.name}</span>
+          <span className="confirm-row__value">Dr. {state.doctor?.doctor_name ?? state.doctor?.name}</span>
         </div>
         <div className="confirm-row">
           <span className="confirm-row__label">Fecha</span>
@@ -277,7 +280,7 @@ function StepSuccess({ state, navigate }) {
       <div className="success-screen__icon">✅</div>
       <h2 className="success-screen__title">¡Cita agendada!</h2>
       <p className="success-screen__subtitle">
-        Tu cita con el Dr. {state.doctor?.name} fue confirmada.
+        Tu cita con el Dr. {state.doctor?.doctor_name ?? state.doctor?.name} fue confirmada.
       </p>
       <div className="card" style={{ width: '100%', maxWidth: 320, textAlign: 'left' }}>
         <div className="confirm-row">
@@ -323,7 +326,8 @@ export default function BookAppointment() {
     setConfirmLoading(true)
     try {
       const scheduledAt = formatScheduledAt(state.date, state.slot)
-      await appointmentService.create(state.doctor.id, scheduledAt, '')
+      const doctorId = state.doctor.doctor_id ?? state.doctor.id
+      await appointmentService.create(doctorId, scheduledAt, '')
       dispatch({ type: 'CONFIRM' })
     } catch (err) {
       setConfirmError(

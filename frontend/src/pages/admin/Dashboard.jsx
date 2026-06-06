@@ -28,14 +28,12 @@ export default function AdminDashboard() {
       try {
         const data = await appointmentService.getAdminMetrics()
         if (!cancelled) {
-          const total     = data?.total     ?? 0
-          const confirmed = data?.confirmed ?? 0
-          const cancelled_ = data?.cancelled ?? 0
-          const rate      = total > 0
-            ? `${Math.round((cancelled_ / total) * 100)}%`
-            : '0%'
-
-          setMetrics({ total, confirmed, cancelled: cancelled_, rate })
+          setMetrics({
+            total:     data?.totalToday     ?? 0,
+            confirmed: data?.confirmedToday ?? 0,
+            cancelled: data?.cancelledToday ?? 0,
+            rate:      `${data?.cancellationRate ?? 0}%`,
+          })
         }
       } catch {
         if (!cancelled) setError('No se pudieron cargar las métricas.')
