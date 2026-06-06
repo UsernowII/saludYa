@@ -58,14 +58,22 @@ router.post('/', async (req, res) => {
 
     const doctorIds = {};
     for (const d of doctorData) {
-      const r = await query(
-        `INSERT INTO doctors (user_id, specialty_id, bio, active)
-         VALUES ($1, $2, $3, true)
-         ON CONFLICT (user_id) DO UPDATE SET specialty_id = $2, bio = $3
-         RETURNING id`,
-        [userIds[d.email], specMap[d.specialty], d.bio]
-      );
-      doctorIds[d.email] = r.rows[0].id;
+      const userId = userIds[d.email];
+      const existing = await query('SELECT id FROM doctors WHERE user_id = $1', [userId]);
+      let doctorId;
+      if (existing.rows.length > 0) {
+        doctorId = existing.rows[0].id;
+        await query('UPDATE doctors SET specialty_id = $1, bio = $2 WHERE id = $3',
+          [specMap[d.specialty], d.bio, doctorId]);
+      } else {
+        const r = await query(
+          `INSERT INTO doctors (user_id, specialty_id, bio, active)
+           VALUES ($1, $2, $3, true) RETURNING id`,
+          [userId, specMap[d.specialty], d.bio]
+        );
+        doctorId = r.rows[0].id;
+      }
+      doctorIds[d.email] = doctorId;
     }
 
     // ── 4. HORARIOS ────────────────────────────────────────────────────────────
