@@ -6,7 +6,12 @@ export const appointmentService = {
    * Returns an array of { doctor, slots[] } objects.
    */
   getAvailable: (specialtyId, date) =>
-    api.get('/appointments/available', { params: { specialtyId, date } }),
+    api.get('/appointments/available', { params: { specialtyId, date } })
+      .then(data => (data || []).map(d => ({
+        ...d,
+        id:   d.doctor_id,
+        name: d.doctor_name,
+      }))),
 
   /**
    * Book an appointment.
